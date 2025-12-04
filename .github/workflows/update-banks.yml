@@ -1,0 +1,30 @@
+name: Update Banking Data
+
+on:
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  update-banks:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      
+      - name: Run update script
+        run: ruby update_banks.rb
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add 3/sql/
+          git diff --staged --quiet || git commit -m "Update banking data - $(date +'%Y-%m-%d')"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

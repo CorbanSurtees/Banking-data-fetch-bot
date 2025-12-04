@@ -3,6 +3,9 @@ name: Update Banking Data
 on:
   workflow_dispatch: # Allows manual triggering
 
+permissions:
+  contents: write
+
 jobs:
   update-banks:
     runs-on: ubuntu-latest

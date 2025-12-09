@@ -64,7 +64,8 @@ jobs:
             --body "Automated update of banks data
 
           - Updated by GitHub Actions workflow
-          - Run number: ${{ github.run_number }}"
+          - Run number: ${{ github.run_number }}" \
+            --reviewer CorbanSurtees
           
           # Enable auto-merge if available
           gh pr merge $BRANCH_NAME --auto --squash || echo "Auto-merge not available or failed"

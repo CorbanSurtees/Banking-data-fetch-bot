@@ -3,10 +3,10 @@ require "fileutils"
 require "date"
 require "csv"
 
-SQL_DIR = File.expand_path("./3/sql", __dir__)
+SQL_DIR = File.expand_path("3/sql", __dir__)
 
 def download(url, dest)
-  URI.open(url) do |u|
+  open(url) do |u|
     File.open(dest, "wb") { |f| f.write(u.read) }
   end
   puts "Downloaded #{dest}"
@@ -15,8 +15,21 @@ end
 def latest_nz_bank_branch_register
   url = "https://www.paymentsnz.co.nz/resources/industry-registers/bank-branch-register/download/csv/"
   today = Date.today.strftime("%Y%m")
+  # Download as CSV first
+  csv_download = File.join(SQL_DIR, "BankBranchRegister-#{today}.csv")
+  download(url, csv_download)
+  # Convert CSV to tab-delimited .txt
   dest = File.join(SQL_DIR, "BankBranchRegister-#{today}.txt")
-  download(url, dest)
+  convert_csv_to_tab_delimited(csv_download, dest)
+  # Remove temporary CSV file
+end
+
+def convert_csv_to_tab_delimited(input_csv, output_txt)
+  File.open(output_txt, "w") do |out|
+    CSV.foreach(input_csv) do |row|
+      out.puts row.join("\t")
+    end
+  end
 end
 
 def latest_au_bsb_key
@@ -47,18 +60,13 @@ def latest_timezone_data
 end
 
 def convert_nz_banks_csv(input_path, output_path)
-  rows = []
-  CSV.foreach(input_path, headers: true) do |row|
-    bank_number = row["Bank_Number"] || row[0]
-    bank_name = row["Bank_Name"] || row[4]
-    rows << ["NZ", bank_number, "\"#{bank_name}\""]
+  # Use awk command to process tab-delimited file
+  cmd = "awk -F'\\t' 'NR > 1 { printf \"NZ,%s,\\\"%s\\\"\\n\", $1, $5 }' \"#{input_path}\" | sort -u > \"#{output_path}\""
+  if system(cmd)
+    puts "Converted to #{output_path}"
+  else
+    puts "Failed to convert #{input_path} using awk command"
   end
-  rows.uniq!
-  rows.sort_by! { |r| r[1] }
-  File.open(output_path, "w") do |f|
-    rows.each { |r| f.puts r.join(",") }
-  end
-  puts "Converted to #{output_path}"
 end
 
 FileUtils.mkdir_p(SQL_DIR)

@@ -44,16 +44,24 @@ jobs:
       
       - name: Create Pull Request
         if: steps.check_changes.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update banks data"
-          branch: update-banks-${{ github.run_number }}
-          delete-branch: true
-          title: "chore: update banks data"
-          body: |
-            Automated update of banks data
-            
-            - Updated by GitHub Actions workflow
-            - Run number: ${{ github.run_number }}
-          base: main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME="update-banks-${{ github.run_number }}"
+          
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          git checkout -b $BRANCH_NAME
+          git add .
+          git commit -m "chore: update banks data"
+          git push origin $BRANCH_NAME
+          
+          gh pr create \
+            --base main \
+            --head $BRANCH_NAME \
+            --title "chore: update banks data" \
+            --body "Automated update of banks data
+
+          - Updated by GitHub Actions workflow
+          - Run number: ${{ github.run_number }}"

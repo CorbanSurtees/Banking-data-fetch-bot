@@ -65,3 +65,6 @@ jobs:
 
           - Updated by GitHub Actions workflow
           - Run number: ${{ github.run_number }}"
+          
+          # Enable auto-merge if available
+          gh pr merge $BRANCH_NAME --auto --squash || echo "Auto-merge not available or failed"

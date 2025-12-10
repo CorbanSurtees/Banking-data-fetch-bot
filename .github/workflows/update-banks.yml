@@ -62,20 +62,21 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Stash the changes from 3/sql/
-          git stash push -m "temp stash for PR" -- 3/sql/
+          # Save the updated files to a temp location
+          mkdir -p /tmp/updated-sql
+          cp -r 3/sql/* /tmp/updated-sql/
           
           # Create new branch from main
           git fetch origin main
           git checkout -b $BRANCH_NAME origin/main
           
-          # Apply the stashed changes
-          git stash pop
+          # Copy the updated files back
+          cp -r /tmp/updated-sql/* 3/sql/
           git add 3/sql/
           
           # Check if there are staged changes to commit
           if git diff --cached --quiet; then
-            echo "No changes to commit after stash pop"
+            echo "No changes to commit"
             exit 0
           fi
           

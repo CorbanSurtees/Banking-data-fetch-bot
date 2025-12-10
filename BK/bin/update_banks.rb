@@ -3,7 +3,7 @@ require "fileutils"
 require "date"
 require "csv"
 
-SQL_DIR = File.expand_path("../..3/sql", __dir__)
+SQL_DIR = File.expand_path("../../3/sql", __dir__)
 
 def download(url, dest)
   open(url) do |u|

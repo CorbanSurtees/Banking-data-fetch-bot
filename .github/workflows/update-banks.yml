@@ -36,14 +36,17 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          # Check if there are any changes (modified, added, or deleted files) in 3/sql/
-          if [[ -n $(git status --porcelain 3/sql/) ]]; then
-            echo "changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in 3/sql/:"
-            git status --porcelain 3/sql/
-          else
+          # Fetch main branch to compare against
+          git fetch origin main
+          
+          # Compare 3/sql/ directory with main branch
+          if git diff --quiet origin/main -- 3/sql/; then
             echo "changes=false" >> $GITHUB_OUTPUT
-            echo "No changes detected in 3/sql/"
+            echo "No changes detected in 3/sql/ compared to main branch"
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in 3/sql/ compared to main branch:"
+            git diff --name-status origin/main -- 3/sql/
           fi
       
       - name: Create Pull Request

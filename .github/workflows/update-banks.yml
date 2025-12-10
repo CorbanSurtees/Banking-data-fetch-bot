@@ -39,14 +39,17 @@ jobs:
           # Fetch main branch to compare against
           git fetch origin main
           
-          # Compare 3/sql/ directory with main branch
-          if git diff --quiet origin/main -- 3/sql/; then
+          # Stage only 3/sql/ files
+          git add 3/sql/
+          
+          # Compare staged changes with main branch
+          if git diff --cached --quiet origin/main -- 3/sql/; then
             echo "changes=false" >> $GITHUB_OUTPUT
             echo "No changes detected in 3/sql/ compared to main branch"
           else
             echo "changes=true" >> $GITHUB_OUTPUT
             echo "Changes detected in 3/sql/ compared to main branch:"
-            git diff --name-status origin/main -- 3/sql/
+            git diff --cached --name-status origin/main -- 3/sql/
           fi
       
       - name: Create Pull Request
@@ -59,8 +62,13 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          git checkout -b $BRANCH_NAME
-          git add 3/sql/
+          # Create new branch from main
+          git fetch origin main
+          git checkout -b $BRANCH_NAME origin/main
+          
+          # Copy the updated 3/sql/ files from the working directory
+          git checkout script-development -- 3/sql/
+          
           git commit -m "chore: update banks data"
           git push origin $BRANCH_NAME
           

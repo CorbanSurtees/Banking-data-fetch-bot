@@ -66,8 +66,15 @@ jobs:
           git fetch origin main
           git checkout -b $BRANCH_NAME origin/main
           
-          # Copy the updated 3/sql/ files from the working directory
+          # Copy the updated 3/sql/ files from script-development
           git checkout script-development -- 3/sql/
+          git add 3/sql/
+          
+          # Check if there are staged changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit after checkout"
+            exit 0
+          fi
           
           git commit -m "chore: update banks data"
           git push origin $BRANCH_NAME

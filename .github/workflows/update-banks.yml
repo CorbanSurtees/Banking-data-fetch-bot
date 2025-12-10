@@ -36,10 +36,14 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if [[ -n $(git status --porcelain) ]]; then
+          # Check if there are any changes (modified, added, or deleted files) in 3/sql/
+          if [[ -n $(git status --porcelain 3/sql/) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in 3/sql/:"
+            git status --porcelain 3/sql/
           else
             echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected in 3/sql/"
           fi
       
       - name: Create Pull Request
@@ -53,7 +57,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           
           git checkout -b $BRANCH_NAME
-          git add .
+          git add 3/sql/
           git commit -m "chore: update banks data"
           git push origin $BRANCH_NAME
           

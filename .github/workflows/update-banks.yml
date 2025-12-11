@@ -3,7 +3,7 @@ name: Update Banks
 on:
   push:
     branches:
-      - script-mainment
+      - script-development
   workflow_dispatch:
 
 permissions:

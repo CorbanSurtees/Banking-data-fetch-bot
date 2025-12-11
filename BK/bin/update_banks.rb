@@ -16,10 +16,10 @@ def latest_nz_bank_branch_register
   url = "https://www.paymentsnz.co.nz/resources/industry-registers/bank-branch-register/download/csv/"
   today = Date.today.strftime("%Y%m")
   # Download as CSV first
-  csv_download = File.join(SQL_DIR, "BankBranchRegister-#{today}.csv")
+  csv_download = File.join(SQL_DIR, "BankBranchRegister.csv")
   download(url, csv_download)
   # Convert CSV to tab-delimited .txt
-  dest = File.join(SQL_DIR, "BankBranchRegister-#{today}.txt")
+  dest = File.join(SQL_DIR, "BankBranchRegister.txt")
   convert_csv_to_tab_delimited(csv_download, dest)
   # Remove temporary CSV file
 end
@@ -35,14 +35,14 @@ end
 def latest_au_bsb_key
   url = "https://auspaynetbsbpublic.blob.core.windows.net/bsb-reports/key%20to%20abbreviations%20and%20bsb%20numbers.csv"
   today = Date.today.strftime("%Y%m%d")
-  dest = File.join(SQL_DIR, "BSBKey-#{today}.csv")
+  dest = File.join(SQL_DIR, "BSBKey.csv")
   download(url, dest)
 end
 
 def latest_au_bsb_directory
   url = "https://auspaynetbsbpublic.blob.core.windows.net/bsb-reports/BSBDirectoryFull.csv"
   today = Date.today.strftime("%Y%m%d")
-  dest = File.join(SQL_DIR, "BSBDirectory-#{today}.csv")
+  dest = File.join(SQL_DIR, "BSBDirectory.csv")
   download(url, dest)
 end
 

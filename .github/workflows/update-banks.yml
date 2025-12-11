@@ -1,9 +1,6 @@
 name: Update Banks
 
 on:
-  push:
-    branches:
-      - script-development
   workflow_dispatch:
 
 permissions:

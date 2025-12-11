@@ -12,6 +12,15 @@ def download(url, dest)
   puts "Downloaded #{dest}"
 end
 
+def convert_csv_to_txt_dos(input_csv, output_txt)
+  # Convert CSV to TXT with DOS line endings (CRLF)
+  File.open(output_txt, "wb") do |out|
+    CSV.foreach(input_csv) do |row|
+      out.write(row.join("\t") + "\r\n")  # <-- CRLF here
+    end
+  end
+end
+
 def latest_nz_bank_branch_register
   url = "https://www.paymentsnz.co.nz/resources/industry-registers/bank-branch-register/download/csv/"
   today = Date.today.strftime("%Y%m")
@@ -37,6 +46,7 @@ def latest_au_bsb_key
   today = Date.today.strftime("%Y%m%d")
   dest = File.join(SQL_DIR, "BSBKey.csv")
   download(url, dest)
+  convert_csv_to_txt_dos(dest, dest)
 end
 
 def latest_au_bsb_directory

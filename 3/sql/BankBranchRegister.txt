@@ -89,6 +89,7 @@ Bank_Number	Branch_Number	National_Clearing_Code	BIC	Bank_Name	Branch_Informatio
 01	0349	010349		ANZ Bank New Zealand	Retail	Wellington	170 Featherston Street						New Zealand	PO Box 18	Shortland Street	Auckland		1140	New Zealand	(07)	0800 269 296	323-4044	R	Y	A
 01	0353	010353		ANZ Bank New Zealand	Kaitaia	Kaitaia	107-109 Commerce Street						New Zealand	PO Box 243	Kaitaia				New Zealand	(09)	0800 269 296	408-1112	R	Y	A
 01	0354	010354		ANZ Bank New Zealand	ANZ Retail	Wellington	170 Featherston Street						New Zealand	PO Box 18	Shortland Street	Auckland		1140	New Zealand	(09)	0800 269 296	267-2686	R	Y	A
+01	0362	010362		ANZ Bank New Zealand	ANZ Retail	Wellington	170 Featherston Street						New Zealand	PO Box 18	Shortland Street	Auckland		1140	New Zealand	(07)	0800 269 296	888-5834	R	Y	A
 01	0367	010367		ANZ Bank New Zealand	ANZ Retail	Wellington	170 Featherston Street						New Zealand	PO Box 18	Shortland Street	Auckland		1140	New Zealand	(07)	0800 269 296	889-5807	R	Y	A
 01	0370	010370		ANZ Bank New Zealand	ANZ Retail	Wellington	170 Featherston Street				6011		New Zealand	PO Box 1393	Wellington			6140	New Zealand	(04)	0800 269 296		R	Y	A
 01	0373	010373		ANZ Bank New Zealand	Mount Maunganui	Tauranga	110-114 Maunganui Road				3116		New Zealand	PO Box 18	Shortland Street	Auckland		1140	New Zealand	(07)	0800 269 296	575-5756	R	Y	A

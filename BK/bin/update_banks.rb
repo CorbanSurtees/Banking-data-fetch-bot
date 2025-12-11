@@ -12,15 +12,6 @@ def download(url, dest)
   puts "Downloaded #{dest}"
 end
 
-def convert_csv_to_txt_dos(input_csv, output_txt)
-  # Convert CSV to TXT with DOS line endings (CRLF)
-  File.open(output_txt, "wb") do |out|
-    CSV.foreach(input_csv) do |row|
-      out.write(row.join("\t") + "\r\n")  # <-- CRLF here
-    end
-  end
-end
-
 def latest_nz_bank_branch_register
   url = "https://www.paymentsnz.co.nz/resources/industry-registers/bank-branch-register/download/csv/"
   today = Date.today.strftime("%Y%m")
@@ -93,13 +84,13 @@ puts "Updating Timezone Data..."
 latest_timezone_data
 
 # Always run NZ bank conversion after downloads
-files = Dir[File.join(SQL_DIR, "BankBranchRegister-*.txt")]
+files = Dir[File.join(SQL_DIR, "BankBranchRegister.txt")]
 if files.any?
   input = files.max
   output = File.join(SQL_DIR, "nz_banks.csv")
   convert_nz_banks_csv(input, output)
 else
-  puts "No BankBranchRegister-*.txt file found in #{SQL_DIR} for conversion"
+  puts "No BankBranchRegister.txt file found in #{SQL_DIR} for conversion"
 end
 
 puts "All downloads and conversions complete."

@@ -3,7 +3,7 @@ name: Update Banks
 on:
   push:
     branches:
-      - script-development
+      - script-mainment
   workflow_dispatch:
 
 permissions:
@@ -36,20 +36,20 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          # Fetch develop branch to compare against
-          git fetch origin develop
+          # Fetch main branch to compare against
+          git fetch origin main
           
           # Stage only 3/sql/ files
           git add 3/sql/
           
-          # Compare staged changes with develop branch
-          if git diff --cached --quiet origin/develop -- 3/sql/; then
+          # Compare staged changes with main branch
+          if git diff --cached --quiet origin/main -- 3/sql/; then
             echo "changes=false" >> $GITHUB_OUTPUT
-            echo "No changes detected in 3/sql/ compared to develop branch"
+            echo "No changes detected in 3/sql/ compared to main branch"
           else
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in 3/sql/ compared to develop branch:"
-            git diff --cached --name-status origin/develop -- 3/sql/
+            echo "Changes detected in 3/sql/ compared to main branch:"
+            git diff --cached --name-status origin/main -- 3/sql/
           fi
       
       - name: Create Pull Request
@@ -73,9 +73,9 @@ jobs:
           # Remove untracked files in 3/sql/ to avoid conflicts
           git clean -fd 3/sql/
           
-          # Create new branch from develop
-          git fetch origin develop
-          git checkout -b $BRANCH_NAME origin/develop
+          # Create new branch from main
+          git fetch origin main
+          git checkout -b $BRANCH_NAME origin/main
           
           # Copy the updated files back
           cp -r /tmp/updated-sql/* 3/sql/
@@ -91,7 +91,7 @@ jobs:
           git push origin $BRANCH_NAME
           
           gh pr create \
-            --base develop \
+            --base main \
             --head $BRANCH_NAME \
             --title "chore: update banks data" \
             --body "Automated update of banks data

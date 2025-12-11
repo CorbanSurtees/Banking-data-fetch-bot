@@ -15,9 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Ruby
@@ -33,63 +34,35 @@ jobs:
       - name: Run update_banks.rb script
         run: ruby BK/bin/update_banks.rb
       
-      - name: Check for changes
-        id: check_changes
-        run: |
-          # Fetch main branch to compare against
-          git fetch origin main
-          
-          # Stage only 3/sql/ files
-          git add 3/sql/
-          
-          # Compare staged changes with main branch
-          if git diff --cached --quiet origin/main -- 3/sql/; then
-            echo "changes=false" >> $GITHUB_OUTPUT
-            echo "No changes detected in 3/sql/ compared to main branch"
-          else
-            echo "changes=true" >> $GITHUB_OUTPUT
-            echo "Changes detected in 3/sql/ compared to main branch:"
-            git diff --cached --name-status origin/main -- 3/sql/
-          fi
-      
-      - name: Create Pull Request
-        if: steps.check_changes.outputs.changes == 'true'
+      - name: Check for changes and create PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH_NAME="update-banks-${{ github.run_number }}"
-          
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          # Save the updated files to a temp location
-          mkdir -p /tmp/updated-sql
-          cp -r 3/sql/* /tmp/updated-sql/
-          
-          # Reset any staged changes and discard local changes
-          git reset HEAD
-          git checkout -- 3/sql/
-          
-          # Remove untracked files in 3/sql/ to avoid conflicts
-          git clean -fd 3/sql/
-          
-          # Create new branch from main
-          git fetch origin main
-          git checkout -b $BRANCH_NAME origin/main
-          
-          # Copy the updated files back
-          cp -r /tmp/updated-sql/* 3/sql/
+          # Check if there are any changes in 3/sql/
           git add 3/sql/
           
-          # Check if there are staged changes to commit
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "No changes detected in 3/sql/"
             exit 0
           fi
           
+          echo "Changes detected in 3/sql/:"
+          git diff --cached --name-status
+          
+          # Create new branch for the PR
+          BRANCH_NAME="update-banks-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b $BRANCH_NAME
+          
+          # Commit the changes
           git commit -m "chore: update banks data"
+          
+          # Push the branch
           git push origin $BRANCH_NAME
           
+          # Create pull request
           gh pr create \
             --base main \
             --head $BRANCH_NAME \
@@ -97,8 +70,8 @@ jobs:
             --body "Automated update of banks data
 
           - Updated by GitHub Actions workflow
-          - Run number: ${{ github.run_number }}" \
+          - Run number: ${{ github.run_number }}
+          - Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" \
             --reviewer CorbanSurtees
           
-          # Enable auto-merge if available
-          gh pr merge $BRANCH_NAME --auto --squash || echo "Auto-merge not available or failed"
+          echo "Pull request created successfully"

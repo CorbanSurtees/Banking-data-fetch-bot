@@ -54,6 +54,7 @@ def latest_au_bsb_directory
   today = Date.today.strftime("%Y%m%d")
   dest = File.join(SQL_DIR, "BSBDirectory.csv")
   download(url, dest)
+  convert_csv_to_txt_dos(dest, dest)
 end
 
 def latest_timezone_data

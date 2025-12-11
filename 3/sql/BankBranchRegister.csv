@@ -32,6 +32,7 @@ Bank_Number,Branch_Number,National_Clearing_Code,BIC,Bank_Name,Branch_Informatio
 01,0121,010121,,ANZ Bank New Zealand,ANZ Retail,Wellington,170 Featherston Street,,,,0630,,New Zealand,PO Box 18,Shortland Street,Auckland,,1140,New Zealand,(09),0800 269 296,479-3314,R,Y,A
 01,0125,010125,,ANZ Bank New Zealand,ANZ Retail,Wellington,170 Featherston Street,,,,,,New Zealand,PO Box 18,Shortland Street,Auckland,,1140,New Zealand,(09),0800 269 296,424-6467,R,Y,A
 01,0126,010126,,ANZ Bank New Zealand,ANZ Group Credit Cards,Auckland,521 Queen Street,4th Floor,,,,,New Zealand,PO Box 9886,Auckland,,,,New Zealand,(09),0800580000,522-3630,,Y,A
+01,0129,010129,,ANZ Bank New Zealand,Retail,Wellington,170 Featherston Street,,,,,,New Zealand,PO Box 1393,Wellington,,,,New Zealand,,0800 269 296,,R,Y,A
 01,0137,010137,,ANZ Bank New Zealand,ANZ Retail,Wellington,170 Featherston Street,Wellington,,,6011,,New Zealand,PO Box 18,Shortland Street,Auckland,,1140,New Zealand,(09),0800 269 296,,R,Y,A
 01,0141,010141,,ANZ Bank New Zealand,ANZ Retail,Wellington,170 Featherston Street,,,,,,New Zealand,PO Box 1393,Wellington,,,,New Zealand,(09),0800 269 296,412-7868,R,Y,A
 01,0142,010142,,ANZ Bank New Zealand,St Lukes ,Auckland,Shop 753,Westfield Shopping Mall,80 St Lukes Rd,Mt Albert,,,New Zealand,PO Box 18,Shortland Street,,,1140,New Zealand,,0800 269 296,,R,Y,A
@@ -77,6 +78,7 @@ Bank_Number,Branch_Number,National_Clearing_Code,BIC,Bank_Name,Branch_Informatio
 01,0307,010307,,ANZ Bank New Zealand,Dargaville,Dargaville,107 Victoria Street,,,,0310,,New Zealand,PO Box 18,Shortland Street,Auckland,,1140,New Zealand,(09),0800 269 296,439-6325,R,Y,A
 01,0310,010310,,ANZ Bank New Zealand,Retail,Wellington,170 Featherston Street,,,,,,New Zealand,PO Box 18,Shortland Street,Auckland,,1140,New Zealand,(07),0800 269 296,402-7679,R,Y,A
 01,0311,010311,,ANZ Bank New Zealand,Retail,Wellington,170 Featherston Street,,,,,,New Zealand,PO Box 1393,Wellington,,,,New Zealand,,0800 269 296,,R,Y,A
+01,0315,010315,,ANZ Bank New Zealand,Hamilton,Hamilton,334 Victoria Street,,,,3204,,New Zealand,PO Box 18,Shortland Street,,,1140,New Zealand,(07),0800 269 296,834-3369,R,Y,A
 01,0321,010321,,ANZ Bank New Zealand,ANZ Retail,Wellington,170 Featherston Street,,,,,,New Zealand,PO Box 1393,Wellington,,,6140,New Zealand,,0800 269 296,,R,Y,A
 01,0322,010322,,ANZ Bank New Zealand,Tauranga Crossing,Tauranga,2 Taurikura Drive,Tauranga,,,3110,,New Zealand,PO Box 18,Shortland Street,Auckland,,1140,New Zealand,(07),0800 269 296,577-9295,R,Y,A
 01,0325,010325,,ANZ Bank New Zealand,Northwood,Auckland,1 Radcliffe Road,Northwood Supa Centa,Belfast,,8051,,New Zealand,PO Box 336,Christchurch,,,8140,New Zealand,(03),0800 269 296,298-2580,R,Y,A

@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   update-banks:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     
     steps:
       - name: Checkout repository
@@ -25,7 +25,6 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gawk tar
       
       - name: Run update_banks.rb script
         run: ruby BK/bin/update_banks.rb

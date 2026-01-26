@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   on-merge:
-    # Only run if the PR was merged (not just closed) and has the specific title
     if: |
       github.event.pull_request.merged == true &&
       github.event.pull_request.title == 'chore: update banks data'
@@ -26,90 +25,28 @@ jobs:
           ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Log merge event
-        run: |
-          echo "PR #${{ github.event.pull_request.number }} was merged"
-          echo "PR Title: ${{ github.event.pull_request.title }}"
-          echo "Merged by: ${{ github.event.pull_request.merged_by.login }}"
-          echo "Merged at: ${{ github.event.pull_request.merged_at }}"
-      
-      - name: Get merged PR files
-        id: get_files
-        run: |
-          echo "Files changed in the merged PR:"
-          gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files[].path'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Create new PR with changes to release/2.2
+      - name: Create PR to release/2.2
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Configure git
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
-          # Fetch all branches
           git fetch origin
+          git checkout release/2.2
+          git pull origin release/2.2
           
-          # Check if release/2.2 branch exists
-          if git ls-remote --heads origin release/2.2 | grep release/2.2; then
-            echo "release/2.2 branch exists, checking it out"
-            git checkout release/2.2
-            git pull origin release/2.2
-          else
-            echo "ERROR: release/2.2 branch doesn't exist!"
-            exit 1
-          fi
-          
-          # Create a new feature branch from release/2.2
           BRANCH_NAME="sync-banks-data-to-2.2-${{ github.run_number }}"
           git checkout -b $BRANCH_NAME
-          
-          # Copy the changes from main
-          git fetch origin main
           git checkout origin/main -- 3/sql/
           
-          # Check if there are changes to commit
           if [[ -n $(git status --porcelain) ]]; then
             git add 3/sql/
-            git commit -m "chore: sync banks data from main
-
-          This PR syncs the banks data that was merged to main in PR #${{ github.event.pull_request.number }}.
-          
-          Original PR: #${{ github.event.pull_request.number }}
-          Merged by: ${{ github.event.pull_request.merged_by.login }}
-          Merged at: ${{ github.event.pull_request.merged_at }}"
-            
+            git commit -m "chore: sync banks data from main"
             git push origin $BRANCH_NAME
             
-            # Create PR to release/2.2
             gh pr create \
               --base release/2.2 \
               --head $BRANCH_NAME \
               --title "chore: sync banks data from main" \
-              --body "## 🔄 Sync Banks Data from Main to 2.2
-
-          This PR syncs the banks data changes that were merged to main.
-
-          **Original PR:** #${{ github.event.pull_request.number }}
-          **Merged by:** ${{ github.event.pull_request.merged_by.login }}
-          **Merged at:** ${{ github.event.pull_request.merged_at }}
-
-          ### Changes
-          - Updated banks data in \`3/sql/\` directory
-
-          ---
-          *This PR was automatically created by the on-banks-data-merged workflow.*"
-            
-            echo "✅ New PR created successfully to release/2.2 branch"
-          else
-            echo "No changes to commit - release/2.2 is already up to date"
+              --body "Syncs banks data from PR #${{ github.event.pull_request.number }}"
           fi
-      
-      - name: Add comment to original PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr comment ${{ github.event.pull_request.number }} \
-            --body "✅ Banks data update has been merged to main and a new PR has been created to sync these changes to release/2.2!"

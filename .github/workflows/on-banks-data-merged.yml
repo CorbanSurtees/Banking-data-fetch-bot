@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [closed]
     branches:
-      - main
+      - develop
 
 permissions:
   contents: write
@@ -35,7 +35,7 @@ jobs:
           git checkout release/2.2
           git pull origin release/2.2
           
-          BRANCH_NAME="sync-banks-data-to-2.2-${{ github.run_number }}"
+          BRANCH_NAME="chore/sync-banks-data-to-2.2-${{ github.run_number }}"
           git checkout -b $BRANCH_NAME
           git checkout origin/main -- 3/sql/
           
@@ -48,5 +48,8 @@ jobs:
               --base release/2.2 \
               --head $BRANCH_NAME \
               --title "chore: sync banks data from main" \
-              --body "Syncs banks data from PR #${{ github.event.pull_request.number }}"
+              --body "Syncs banks data from PR #${{ github.event.pull_request.number }}" \
+              --reviewer ${{ vars.UPDATE_BANK_REVIEWER }}
+            
+            gh pr merge $BRANCH_NAME --auto --squash || true
           fi

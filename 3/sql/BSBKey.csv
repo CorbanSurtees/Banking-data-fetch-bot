@@ -1,18 +1,22 @@
 BSB Owner,Owner Name,BSB Prefix
 ABA,Auswide Bank Ltd,645
 ABA,Auswide Bank Ltd,656
+ABC,Agricultural Bank of China Limited,898
 ADC,Australian Military Bank Limited,642
 ADL,Adelaide Bank (a division of Bendigo and Adelaide Bank Limited),610
 ADV,Advance Bank Australia (a division of Westpac Banking Corp),46
+ADY,Adyen Australia Pty Limited,953
 AFT,AFT AU Pty Ltd,771
 ALX,Alex Bank Pty Ltd,259
 AMP,AMP Bank Limited,939
 ANZ,Australia & New Zealand Banking Group Limited,1
 APO,Australia Post (Money Orders),90
+ARA,Arab Bank Australia Limited,917
 ASL,Australian Settlements Limited,57
 AVE,Avenue Bank Ltd,890
 BAE,B&E Ltd trading as Bank of Us,632
 BAL,Bank of America National Association,23
+BAR,"Barclays Bank PLC, Australia Branch",914
 BAU,Bank Australia Limited,313
 BBL,Bendigo and Adelaide Bank Limited,633
 BCA,Bank of China (Australia) Limited,980
@@ -39,6 +43,8 @@ CBL,Challenge Bank (a division of Westpac Banking Corp),47
 CCB,"China Construction Bank Corporation, Sydney Branch",888
 CEB,China Everbright Bank Co Ltd,681
 CFC,Community First Credit Union Limited,512
+CLS,CLS Bank International,950
+CMA,"China Merchants Bank Co., Ltd.",828
 CMB,"JP Morgan Chase Bank, National Association",21
 CNA,Citibank N.A.,510
 COM,"Bank of Communications Co., Ltd Sydney Branch",818
@@ -82,6 +88,7 @@ INV,BOQ Specialist (a division of Bank of Queensland Limited),951
 JUD,Judo Bank Pty Ltd,725
 KEB,KEB Hana Bank,323
 LBA,Bank of Sydney Ltd,942
+LCH,LCH.Clearnet Limited,499
 MBL,Macquarie Bank Limited,18
 MCB,"Mizuho Bank, Ltd",918
 MEB,Bank of Queensland Limited,944
@@ -92,6 +99,7 @@ MON,Monoova Payments Pty Ltd,257
 MSL,Tyro Payments Limited,969
 NAB,National Australia Bank Limited,8
 NEW,Newcastle Greater Mutual Group Ltd,650
+NTA,"Northern Trust Company, The",020
 OCB,Oversea-Chinese Banking Corporation Limited,45
 ONE,in1bank Limited,311
 PCU,Police Bank Ltd (trading as Police Bank),815
@@ -102,9 +110,12 @@ QCB,Queensland Country Bank Limited,654
 QTM,Members Banking Group Limited Trading as RACQ Bank,514
 RAB,Regional Australia Bank Limited,932
 RBA,Reserve Bank of Australia,9
+RBB,Cooperatieve Rabobank U.A.,930
+RBC,Royal Bank of Canada,935
 RCU,Railways Credit Union Limited t/a MOVE Bank,724
 REV,Revolut Payments Australia Pty Ltd,772
 ROK,MyState Bank Limited,655
+SBI,State Bank of India,949
 SCB,"Standard Chartered Bank, Australia Branch",43
 SCU,Summerland Financial Servces Limited (Trading as Summerland Bank),728
 SEL,Australian Mutual Bank Limited,611

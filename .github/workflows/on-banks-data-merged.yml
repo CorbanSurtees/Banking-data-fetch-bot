@@ -1,0 +1,116 @@
+name: On Banks Data Merged
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  on-merge:
+    # Only run if the PR was merged (not just closed) and has the specific title
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.title == 'chore: update banks data'
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Log merge event
+        run: |
+          echo "PR #${{ github.event.pull_request.number }} was merged"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "Merged by: ${{ github.event.pull_request.merged_by.login }}"
+          echo "Merged at: ${{ github.event.pull_request.merged_at }}"
+      
+      - name: Get merged PR files
+        id: get_files
+        run: |
+          echo "Files changed in the merged PR:"
+          gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files[].path'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create new PR with changes to develop
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Configure git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Create a new branch from develop (or create develop from main if it doesn't exist)
+          git fetch origin
+          
+          # Check if develop branch exists
+          if git ls-remote --heads origin develop | grep develop; then
+            echo "Develop branch exists, checking it out"
+            git checkout develop
+            git pull origin develop
+          else
+            echo "Develop branch doesn't exist, creating from main"
+            git checkout -b develop
+            git push origin develop
+          fi
+          
+          # Create a new feature branch
+          BRANCH_NAME="sync-banks-data-from-main-${{ github.run_number }}"
+          git checkout -b $BRANCH_NAME
+          
+          # Cherry-pick the merge commit or get the changes from main
+          git fetch origin main
+          git checkout origin/main -- 3/sql/
+          
+          # Check if there are changes to commit
+          if [[ -n $(git status --porcelain) ]]; then
+            git add 3/sql/
+            git commit -m "chore: sync banks data from main
+
+          This PR syncs the banks data that was merged to main in PR #${{ github.event.pull_request.number }}.
+          
+          Original PR: #${{ github.event.pull_request.number }}
+          Merged by: ${{ github.event.pull_request.merged_by.login }}
+          Merged at: ${{ github.event.pull_request.merged_at }}"
+            
+            git push origin $BRANCH_NAME
+            
+            # Create PR to develop
+            gh pr create \
+              --base develop \
+              --head $BRANCH_NAME \
+              --title "chore: sync banks data from main" \
+              --body "## 🔄 Sync Banks Data from Main
+
+          This PR syncs the banks data changes that were merged to main.
+
+          **Original PR:** #${{ github.event.pull_request.number }}
+          **Merged by:** ${{ github.event.pull_request.merged_by.login }}
+          **Merged at:** ${{ github.event.pull_request.merged_at }}
+
+          ### Changes
+          - Updated banks data in \`3/sql/\` directory
+
+          ---
+          *This PR was automatically created by the on-banks-data-merged workflow.*"
+            
+            echo "✅ New PR created successfully to develop branch"
+          else
+            echo "No changes to commit - develop is already up to date"
+          fi
+      
+      - name: Add comment to original PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment ${{ github.event.pull_request.number }} \
+            --body "✅ Banks data update has been merged to main and a new PR has been created to sync these changes to develop!"

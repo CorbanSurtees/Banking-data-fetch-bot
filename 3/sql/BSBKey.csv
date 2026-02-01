@@ -1,6 +1,6 @@
 BSB Owner,Owner Name,BSB Prefix
-ABA,Auswide Bank Ltd,645
-ABA,Auswide Bank Ltd,656
+ABA,Auswide (a division of MyState Bank Limited),645
+ABA,Auswide (a division of MyState Bank Limited),656
 ABC,Agricultural Bank of China Limited,898
 ADC,Australian Military Bank Limited,642
 ADL,Adelaide Bank (a division of Bendigo and Adelaide Bank Limited),610
@@ -12,7 +12,7 @@ AMP,AMP Bank Limited,939
 ANZ,Australia & New Zealand Banking Group Limited,1
 APO,Australia Post (Money Orders),90
 ARA,Arab Bank Australia Limited,917
-ASL,Australian Settlements Limited,57
+ASL,Australian Settlements Limited (trading as Banking Circle),57
 AVE,Avenue Bank Ltd,890
 BAE,B&E Ltd trading as Bank of Us,632
 BAL,Bank of America National Association,23
@@ -99,7 +99,7 @@ MON,Monoova Payments Pty Ltd,257
 MSL,Tyro Payments Limited,969
 NAB,National Australia Bank Limited,8
 NEW,Newcastle Greater Mutual Group Ltd,650
-NTA,"Northern Trust Company, The",020
+NTA,"Northern Trust Company, The",20
 OCB,Oversea-Chinese Banking Corporation Limited,45
 ONE,in1bank Limited,311
 PCU,Police Bank Ltd (trading as Police Bank),815

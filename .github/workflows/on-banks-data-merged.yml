@@ -1,0 +1,63 @@
+name: On Banks Data Merged
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  on-merge:
+    if: |
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.title == 'chore: update banks data'
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Create PR to release/2.2
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git fetch origin
+          git checkout release/2.2
+          git pull origin release/2.2
+          
+          BRANCH_NAME="chore/sync-banks-data-to-2.2-${{ github.run_number }}"
+          git checkout -b $BRANCH_NAME
+          
+          MERGE_COMMIT="${{ github.event.pull_request.merge_commit_sha }}"
+          
+          if git cherry-pick $MERGE_COMMIT; then
+            echo "Cherry-pick succeeded without conflicts"
+          else
+            echo "Cherry-pick had conflicts, resolving by accepting theirs (main branch version)"
+            # For conflicts in 3/sql/, accept the version from the commit being cherry-picked
+            git checkout --theirs 3/sql/
+            git add 3/sql/
+            git cherry-pick --continue --no-edit
+          fi
+          
+          if [[ -n $(git diff origin/release/2.2) ]]; then
+            git push origin $BRANCH_NAME
+            
+            gh pr create \
+              --base release/2.2 \
+              --head $BRANCH_NAME \
+              --title "chore: sync banks data from main" \
+              --body "Cherry-picks commit $MERGE_COMMIT from PR #${{ github.event.pull_request.number }}" \
+              --reviewer ${{ vars.UPDATE_BANK_REVIEWER }}
+            
+            gh pr merge $BRANCH_NAME --auto --squash || true
+          else
+            echo "No changes to sync"
+          fi

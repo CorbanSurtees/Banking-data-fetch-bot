@@ -34,19 +34,22 @@ jobs:
           
           BRANCH_NAME="chore/sync-banks-data-to-2.2-${{ github.run_number }}"
           git checkout -b $BRANCH_NAME
-          git checkout origin/main -- 3/sql/
           
-          if [[ -n $(git status --porcelain) ]]; then
-            git add 3/sql/
-            git commit -m "chore: sync banks data from main"
+          MERGE_COMMIT="${{ github.event.pull_request.merge_commit_sha }}"
+          
+          if git cherry-pick $MERGE_COMMIT; then
             git push origin $BRANCH_NAME
             
             gh pr create \
               --base release/2.2 \
               --head $BRANCH_NAME \
               --title "chore: sync banks data from main" \
-              --body "Syncs banks data from PR #${{ github.event.pull_request.number }}" \
+              --body "Cherry-picks commit $MERGE_COMMIT from PR #${{ github.event.pull_request.number }}" \
               --reviewer ${{ vars.UPDATE_BANK_REVIEWER }}
             
             gh pr merge $BRANCH_NAME --auto --squash || true
+          else
+            echo "Cherry-pick failed, manual intervention required"
+            git cherry-pick --abort
+            exit 1
           fi

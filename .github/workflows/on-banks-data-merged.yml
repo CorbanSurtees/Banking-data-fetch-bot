@@ -38,6 +38,16 @@ jobs:
           MERGE_COMMIT="${{ github.event.pull_request.merge_commit_sha }}"
           
           if git cherry-pick $MERGE_COMMIT; then
+            echo "Cherry-pick succeeded without conflicts"
+          else
+            echo "Cherry-pick had conflicts, resolving by accepting theirs (main branch version)"
+            # For conflicts in 3/sql/, accept the version from the commit being cherry-picked
+            git checkout --theirs 3/sql/
+            git add 3/sql/
+            git cherry-pick --continue --no-edit
+          fi
+          
+          if [[ -n $(git diff origin/release/2.2) ]]; then
             git push origin $BRANCH_NAME
             
             gh pr create \
@@ -49,7 +59,5 @@ jobs:
             
             gh pr merge $BRANCH_NAME --auto --squash || true
           else
-            echo "Cherry-pick failed, manual intervention required"
-            git cherry-pick --abort
-            exit 1
+            echo "No changes to sync"
           fi

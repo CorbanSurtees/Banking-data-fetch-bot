@@ -37,24 +37,35 @@ jobs:
           
           MERGE_COMMIT="${{ github.event.pull_request.merge_commit_sha }}"
           
-          if git cherry-pick $MERGE_COMMIT; then
-            echo "Cherry-pick succeeded without conflicts"
-          else
-            echo "Cherry-pick had conflicts, resolving by accepting theirs (main branch version)"
-            # For conflicts in 3/sql/, accept the version from the commit being cherry-picked
-            git checkout --theirs 3/sql/
-            git add 3/sql/
-            git cherry-pick --continue --no-edit
+          # Get the list of files changed in the specific PR commit
+          # Use the merge commit's first parent (main before merge) to get only PR changes
+          CHANGED_FILES=$(git diff --name-only ${MERGE_COMMIT}^1 ${MERGE_COMMIT} -- 3/sql/)
+          
+          if [[ -z "$CHANGED_FILES" ]]; then
+            echo "No files in 3/sql/ were changed in this PR"
+            exit 0
           fi
           
-          if [[ -n $(git diff origin/release/2.2) ]]; then
+          echo "Files changed in PR: $CHANGED_FILES"
+          
+          # Checkout only the specific files that were changed in the PR
+          for file in $CHANGED_FILES; do
+            git checkout $MERGE_COMMIT -- "$file"
+          done
+          
+          if [[ -n $(git status --porcelain) ]]; then
+            git add 3/sql/
+            git commit -m "chore: sync banks data from main
+
+Cherry-picked changes from commit $MERGE_COMMIT (PR #${{ github.event.pull_request.number }})"
+            
             git push origin $BRANCH_NAME
             
             gh pr create \
               --base release/2.2 \
               --head $BRANCH_NAME \
               --title "chore: sync banks data from main" \
-              --body "Cherry-picks commit $MERGE_COMMIT from PR #${{ github.event.pull_request.number }}" \
+              --body "Syncs banks data changes from commit $MERGE_COMMIT (PR #${{ github.event.pull_request.number }})" \
               --reviewer ${{ vars.UPDATE_BANK_REVIEWER }}
             
             gh pr merge $BRANCH_NAME --auto --squash || true

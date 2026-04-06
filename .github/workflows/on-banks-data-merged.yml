@@ -55,9 +55,8 @@ jobs:
           
           if [[ -n $(git status --porcelain) ]]; then
             git add 3/sql/
-            git commit -m "chore: sync banks data from main
-
-Cherry-picked changes from commit $MERGE_COMMIT (PR #${{ github.event.pull_request.number }})"
+            git commit -m "chore: sync banks data from main" \
+                       -m "Cherry-picked changes from commit $MERGE_COMMIT (PR #${{ github.event.pull_request.number }})"
             
             git push origin $BRANCH_NAME
             

@@ -1,10 +1,16 @@
 name: On Banks Data Merged
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
+    paths:
+      - '3/sql/BankBranchRegister.csv'
+      - '3/sql/BankBranchRegister.txt'
+      - '3/sql/BSBKey.csv'
+      - '3/sql/BSBDirectory.csv'
+      - '3/sql/zone.tab'
+      - '3/sql/nz_banks.csv'
 
 permissions:
   contents: write
@@ -13,8 +19,6 @@ permissions:
 jobs:
   on-merge:
     if: |
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.title == 'chore: update banks data'
     
     runs-on: ubuntu-latest
     
@@ -64,7 +68,7 @@ jobs:
               --base release/2.2 \
               --head $BRANCH_NAME \
               --title "chore: sync banks data from main" \
-              --body "Syncs banks data changes from commit $MERGE_COMMIT (PR #${{ github.event.pull_request.number }})" \
+              --body "Syncs banks data from main branch})" \
               --reviewer ${{ vars.UPDATE_BANK_REVIEWER }}
             
             gh pr merge $BRANCH_NAME --auto --squash || true
